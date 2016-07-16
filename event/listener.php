@@ -2,12 +2,13 @@
 /**
 *
 * @package forumticket
-* @copyright (c) 2016 alg 
+* @copyright (c) 2016 alg
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
  */
 
 namespace alg\forumticket\event;
+
 /**
 * Event listener
 */
@@ -18,13 +19,13 @@ class listener implements EventSubscriberInterface
 	const GUESTS = 1;
 	const ADMINISTRATORS = 5;
 	const BOTS = 6;
-	
+
 	/** @var \phpbb\config\config */
 	protected $config;
 
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
-	
+
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
@@ -62,17 +63,7 @@ class listener implements EventSubscriberInterface
 	* @param string $user_group_table
 	* @access public
 	*/
-	public function __construct(\phpbb\config\config $config
-									, \phpbb\db\driver\driver_interface $db
-									, \phpbb\auth\auth $auth
-									, \phpbb\template\template $template
-									, \phpbb\user $user
-									, $phpbb_root_path
-									, $php_ext
-									, \phpbb\request\request_interface $request
-									, \phpbb\pagination $pagination
-									, $user_group_table
-								)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\template\template $template, \phpbb\user $user, $phpbb_root_path, $php_ext, \phpbb\request\request_interface $request, \phpbb\pagination $pagination, $user_group_table)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -84,12 +75,12 @@ class listener implements EventSubscriberInterface
 		$this->request = $request;
 		$this->pagination =  $pagination;
 		$this->user_group_table = $user_group_table;
-		
+
 		$this->forumticket = false;
 		$this->group_id_approve = 0;
-		
+
 		$this->exclude_forum_topics_details = array();	//for forumlist
-		
+
 	}
 
 	static public function getSubscribedEvents()
@@ -98,17 +89,17 @@ class listener implements EventSubscriberInterface
 			//acp
 			'core.acp_manage_forums_request_data'			=> 'acp_manage_forums_request_data',
 			'core.acp_manage_forums_display_form'			=> 'acp_manage_forums_display_form',
-			
+
 			//viewtopic
 			'core.viewtopic_modify_page_title'						=> 'viewtopic_modify_page_title',
-			
+
 			//viewforum
 			'core.viewforum_get_topic_data'		=> 'viewforum_get_topic_data',
 			'core.viewforum_modify_topics_data'		=> 'viewforum_modify_topics_data',
 
 			'core.display_forums_modify_row'		=> 'display_forums_modify_row',
 			'core.display_forums_modify_forum_rows'		=> 'display_forums_modify_forum_rows',
-			
+
 			//search
 			'core.search_get_topic_data'		=> 'search_get_topic_data',
 			'core.search_get_posts_data'		=> 'search_get_posts_data',
@@ -125,19 +116,19 @@ class listener implements EventSubscriberInterface
 
 			'alg.livesearch.sql_livesearch_userposts'		=> 'sql_livesearch_userposts',
 			'alg.livesearch.modify_tpl_ary_livesearch_userposts_matches'		=> 'modify_tpl_ary_livesearch_userposts_matches',
-			
+
 			//lasttopics  (ext)		  
 			'alg.lasttopics.sql_latest_general_topics'		=> 'sql_latest_general_topics',
-			
+
 			//similartopics  (ext)		  
 			'vse.similartopics.get_topic_data'		=> 'similartopics_get_topic_data',
-			
+
 			//topfive  (ext)		  
 			'rmcgirr83.topfive.sql_pull_topics_data'		=> 'sql_pull_topics_data',
-			
+
 			//recenttopics  (ext)		  
 			'paybas.recenttopics.sql_pull_topics_list'		=> 'sql_pull_topics_list',
-			
+
 		);
 	}
 	#region ACP functions
@@ -199,10 +190,10 @@ class listener implements EventSubscriberInterface
 			$this->user->add_lang_ext('alg/forumticket', 'info_acp_forumticket');
 			trigger_error('SORRY_AUTH_READ_TICKET');
 		}
-   }
-	
+	}
+
 	#endregion
-	
+
 	#region viewforum
 	public function viewforum_get_topic_data($event)
 	{
@@ -221,7 +212,7 @@ class listener implements EventSubscriberInterface
 		$topic_list = $event['topic_list'];
 		$total_topic_count = $event['total_topic_count'];
 		 
-	   foreach ($rowset as $key => $row)
+		foreach ($rowset as $key => $row)
 		{
 			$t_read =  $row['topic_type'] != POST_NORMAL || ($row['topic_poster'] == $this->user->data['user_id'] ) || group_memberships($this->group_id_approve, $this->user->data['user_id'], true);
 			if(!$t_read)
@@ -317,9 +308,9 @@ class listener implements EventSubscriberInterface
 		}
 	}
 	#endregion
-	
+
 	#region search
-  
+
 	public function search_get_topic_data($event)
 	{
 		$total_match_count = $event['total_match_count'];
@@ -331,7 +322,7 @@ class listener implements EventSubscriberInterface
 			$event['sql_where'] = $where;
 		}
 		$this->total_match_count = $total_match_count - sizeof($ex_tid_ary);
-	}   
+	}
 	public function search_get_posts_data($event)
 	{
 		$total_match_count = $event['total_match_count'];
@@ -364,7 +355,7 @@ class listener implements EventSubscriberInterface
 				$l_search_matches = $this->user->lang('FOUND_SEARCH_MATCHES', (int) $total_match_count);
 			}
 			$start = $event['start'];  
-		   
+
 			$this->template->assign_vars(array(
 				'SEARCH_MATCHES'	=> $l_search_matches,
 				'TOTAL_MATCHES'	=> $this->total_match_count,
@@ -374,7 +365,7 @@ class listener implements EventSubscriberInterface
 		}
 	}
 	#endregion
-	
+
 	#region feed
 	public function feed_sql($event)
 	{
@@ -389,9 +380,9 @@ class listener implements EventSubscriberInterface
 			 $event['sql_array'] = $sql_array;
 		}
 	}
-	
+
 	#endregion
-	
+
 	#region livesearch
 	function sql_livesearch_topics($event)
 	{
@@ -401,7 +392,7 @@ class listener implements EventSubscriberInterface
 			$this->update_sql_array($ex_tid_ary, $event);
 		}
 	}
-	
+
 	public function sql_livesearch_usertopics($event)
 	{
 		$total_match_count = $event['total_match_count'];
@@ -429,7 +420,7 @@ class listener implements EventSubscriberInterface
 			$event['total_match_count'] =  $total_match_count;   
 		}
 	}
- 
+
 	public function sql_livesearch_userposts($event)
 	{
 		$total_match_count = $event['total_match_count'];
@@ -437,7 +428,7 @@ class listener implements EventSubscriberInterface
 		if(sizeof($ex_tid_ary))
 		{
 			 $this->update_sql_array($ex_tid_ary, $event);
-	   }
+		}
 		$this->total_match_count = $total_match_count - sizeof($ex_tid_ary);
 	}
 	public function modify_tpl_ary_livesearch_userposts_matches($event)
@@ -457,9 +448,9 @@ class listener implements EventSubscriberInterface
 			$event['total_match_count'] =  $total_match_count;   
 		}
 	}
-	
+
 	#endregion
-	
+
 	#region lasttopics
 	public function sql_latest_general_topics($event)
 	{
@@ -469,9 +460,9 @@ class listener implements EventSubscriberInterface
 			 $this->update_sql_array($ex_tid_ary, $event);
 		}
 	}
-	
+
 	#endregion
-	
+
 	#region similartopics
 	function similartopics_get_topic_data($event)
 	{
@@ -481,9 +472,9 @@ class listener implements EventSubscriberInterface
 			$this->update_sql_array($ex_tid_ary, $event);
 	   }
 	}
-	
+
 	#endregion
-	
+
 	#region topfive
 	function sql_pull_topics_data($event)
 	{
@@ -493,9 +484,9 @@ class listener implements EventSubscriberInterface
 			 $this->update_sql_array($ex_tid_ary, $event);
 		}
 	}
-	
+
 	#endregion
-	
+
 	#region recenttopics
 	function sql_pull_topics_list($event)
 	{
@@ -505,9 +496,9 @@ class listener implements EventSubscriberInterface
 			 $this->update_sql_array($ex_tid_ary, $event);
 		}
 	}
-	
+
 	#endregion
-	
+
 	#region private functions
 	private function get_topics_excluded()
 	{
@@ -534,8 +525,7 @@ class listener implements EventSubscriberInterface
 		$sql_array['WHERE'] = $where;
 		$event['sql_array'] = $sql_array;
 	}
-		
-	
+
 	#endregion
-	
+
 }
