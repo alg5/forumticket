@@ -108,7 +108,7 @@ class listener implements EventSubscriberInterface
 			 //feed (for future version phpbb)
 			'core.feed_sql'		=> 'feed_sql',
 
-			//livesearch  (ext)		  
+			//livesearch  (ext)
 			'alg.livesearch.sql_livesearch_topics'		=> 'sql_livesearch_topics',
 
 			'alg.livesearch.sql_livesearch_usertopics'		=> 'sql_livesearch_usertopics',
@@ -117,16 +117,16 @@ class listener implements EventSubscriberInterface
 			'alg.livesearch.sql_livesearch_userposts'		=> 'sql_livesearch_userposts',
 			'alg.livesearch.modify_tpl_ary_livesearch_userposts_matches'		=> 'modify_tpl_ary_livesearch_userposts_matches',
 
-			//lasttopics  (ext)		  
+			//lasttopics  (ext)
 			'alg.lasttopics.sql_latest_general_topics'		=> 'sql_latest_general_topics',
 
-			//similartopics  (ext)		  
+			//similartopics  (ext)
 			'vse.similartopics.get_topic_data'		=> 'similartopics_get_topic_data',
 
-			//topfive  (ext)		  
+			//topfive  (ext)
 			'rmcgirr83.topfive.sql_pull_topics_data'		=> 'sql_pull_topics_data',
 
-			//recenttopics  (ext)		  
+			//recenttopics  (ext)
 			'paybas.recenttopics.sql_pull_topics_list'		=> 'sql_pull_topics_list',
 
 		);
@@ -147,10 +147,10 @@ class listener implements EventSubscriberInterface
 	{
 		$template_data = $event['template_data'];
 		$forum_data = $event['forum_data'];
-		
+
 		$forum_id_src = isset($forum_data['forum_type_ticket']) ? $forum_data['forum_type_ticket'] : 0;
 		$group_id_src = isset($forum_data['group_id_approve_ticket']) ? $forum_data['group_id_approve_ticket'] : 0;
-		
+
 		$group_id = listener::ADMINISTRATORS;
 		$group_name = $this->user->lang['ADMINISTRATORS'];
 
@@ -162,11 +162,11 @@ class listener implements EventSubscriberInterface
 		}
 		$exclude_ids[] = listener::GUESTS;
 		$exclude_ids[] = listener::BOTS;
-		
+
 		$forum_data = $event['forum_data'];
 		$template_data += array(
 			'S_GROUP_OPTIONS'		=> group_select_options(false, $exclude_ids, false), // Show groups
-			'S_GROUP_APPROVAL_ID'		=> $group_id, 
+			'S_GROUP_APPROVAL_ID'		=> $group_id,
 			'S_GROUP_APPROVAL_NAME'		=>$group_name,
 			'S_FORUMTICKET_CHECKED'		=>(bool) $forum_id_src,
 		);
@@ -175,17 +175,17 @@ class listener implements EventSubscriberInterface
 	}
 
 	#endregion
-	
+
 	#region viewtopic
 	public function viewtopic_modify_page_title($event)
 	{
 		$topic_data = $event['topic_data'];
-		if (!$topic_data['forum_type_ticket'] ) 
+		if (!$topic_data['forum_type_ticket'] )
 		{
 			return;
 		}
 		$t_read =  $topic_data['topic_type'] != POST_NORMAL || ($topic_data['topic_poster'] == $this->user->data['user_id'] ) || group_memberships($topic_data['group_id_approve_ticket'], $this->user->data['user_id'], true);
-		if(!$t_read)
+		if (!$t_read)
 		{
 			$this->user->add_lang_ext('alg/forumticket', 'info_acp_forumticket');
 			trigger_error('SORRY_AUTH_READ_TICKET');
@@ -203,7 +203,7 @@ class listener implements EventSubscriberInterface
 	}
 	public function viewforum_modify_topics_data($event)
 	{
-		if (!$this->forumticket ) 
+		if (!$this->forumticket )
 		{
 			return;
 		}
@@ -211,30 +211,30 @@ class listener implements EventSubscriberInterface
 		$rowset = $event['rowset'];
 		$topic_list = $event['topic_list'];
 		$total_topic_count = $event['total_topic_count'];
-		 
+
 		foreach ($rowset as $key => $row)
 		{
 			$t_read =  $row['topic_type'] != POST_NORMAL || ($row['topic_poster'] == $this->user->data['user_id'] ) || group_memberships($this->group_id_approve, $this->user->data['user_id'], true);
-			if(!$t_read)
+			if (!$t_read)
 			{
-				$key_topic_list = array_search($key, $topic_list); 
+				$key_topic_list = array_search($key, $topic_list);
 				unset($topic_list[$key_topic_list]);
 				unset($rowset[$key]);
 				$total_topic_count--;
 			}
-			
+
 		}
-		if($total_topic_count < $event['total_topic_count'])
+		if ($total_topic_count < $event['total_topic_count'])
 		{
 			$start = $this->request->variable('start', 0);
 			$this->template->assign_vars(array(
 				'TOTAL_TOPICS'	=> $this->user->lang('VIEW_FORUM_TOPICS', (int) $total_topic_count),
 				'PAGE_NUMBER'			=>  $total_topic_count == 0 ?  0 : $this->pagination->on_page($total_topic_count, $this->config['topics_per_page'], $start),
 			));
-		 $event['total_topic_count'] =  $total_topic_count;   
-		 $event['topic_list'] =  $topic_list;   
-		 $event['$rowset'] =  $rowset;   
-		
+		$event['total_topic_count'] =  $total_topic_count;
+		$event['topic_list'] =  $topic_list;
+		$event['$rowset'] =  $rowset;
+
 		}
 	}
 
@@ -242,10 +242,10 @@ class listener implements EventSubscriberInterface
 	{
 		$row = $event['row'];
 		include_once($this->phpbb_root_path .  'includes/functions_user.' . $this->php_ext);
-		if(isset($row['forum_type_ticket']) && $row['forum_type_ticket'] && isset($row['group_id_approve_ticket']) && ! group_memberships($row['group_id_approve_ticket'], $this->user->data['user_id'], true))
+		if (isset($row['forum_type_ticket']) && $row['forum_type_ticket'] && isset($row['group_id_approve_ticket']) && ! group_memberships($row['group_id_approve_ticket'], $this->user->data['user_id'], true))
 		{
 			$ex_tid_ary = $this->get_topics_excluded();
-			if(!sizeof($ex_tid_ary))
+			if (!sizeof($ex_tid_ary))
 			{
 				return;
 			}
@@ -262,10 +262,10 @@ class listener implements EventSubscriberInterface
 			$t_ary = array();
 			$topics = 0;
 			$posts = 0;
-			
+
 			while ($trow = $this->db->sql_fetchrow($result))
 			{
-				if($this->auth->acl_get('f_read', $row['forum_id']))
+				if ($this->auth->acl_get('f_read', $row['forum_id']))
 				{
 					$t_ary[] = $trow;
 					$topics++;
@@ -273,7 +273,7 @@ class listener implements EventSubscriberInterface
 				}
 			}
 			//$this->exclude_forum_topics_details
-			if(!sizeof($t_ary))
+			if (!sizeof($t_ary))
 			{
 				$row['forum_last_post_id'] = 0;
 				$row['forum_last_poster_id'] = 0;
@@ -300,7 +300,7 @@ class listener implements EventSubscriberInterface
 	{
 		$parent_id = $event['parent_id'];
 		$forum_rows = $event['forum_rows'];
-		if(isset($this->exclude_forum_topics_details[$parent_id]))
+		if (isset($this->exclude_forum_topics_details[$parent_id]))
 		{
 			$forum_rows[$parent_id]['forum_topics'] = $this->exclude_forum_topics_details[$parent_id]['topics'];
 			$forum_rows[$parent_id]['forum_posts'] = $this->exclude_forum_topics_details[$parent_id]['posts'];
@@ -315,7 +315,7 @@ class listener implements EventSubscriberInterface
 	{
 		$total_match_count = $event['total_match_count'];
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			$where = $event['sql_where'];
 			$where .= ' AND ' . $this->db->sql_in_set('t.topic_id', $ex_tid_ary, true);
@@ -327,7 +327,7 @@ class listener implements EventSubscriberInterface
 	{
 		$total_match_count = $event['total_match_count'];
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			$this->update_sql_array($ex_tid_ary, $event);
 		}
@@ -336,7 +336,7 @@ class listener implements EventSubscriberInterface
 	public function search_results_modify_search_title($event)
 	{
 		$total_match_count = $event['total_match_count'];
-		if(isset($this->total_match_count) && $this->total_match_count != $total_match_count)
+		if (isset($this->total_match_count) && $this->total_match_count != $total_match_count)
 		{
 			$total_matches_limit = 1000;
 			$total_match_count = $this->total_match_count;
@@ -345,7 +345,7 @@ class listener implements EventSubscriberInterface
 			{
 				$found_more_search_matches = true;
 				$total_match_count = $total_matches_limit;
-			}			
+			}
 			if ($found_more_search_matches)
 			{
 				$l_search_matches = $this->user->lang('FOUND_MORE_SEARCH_MATCHES', (int) $total_match_count);
@@ -354,14 +354,14 @@ class listener implements EventSubscriberInterface
 			{
 				$l_search_matches = $this->user->lang('FOUND_SEARCH_MATCHES', (int) $total_match_count);
 			}
-			$start = $event['start'];  
+			$start = $event['start'];
 
 			$this->template->assign_vars(array(
 				'SEARCH_MATCHES'	=> $l_search_matches,
 				'TOTAL_MATCHES'	=> $this->total_match_count,
 				'PAGE_NUMBER'			=>  $total_match_count == 0 ?  0 : $this->pagination->on_page($total_match_count, $this->config['topics_per_page'], $start),
 			));
-		 $event['total_match_count'] =  $total_match_count;   
+		 $event['total_match_count'] =  $total_match_count;
 		}
 	}
 	#endregion
@@ -370,7 +370,7 @@ class listener implements EventSubscriberInterface
 	public function feed_sql($event)
 	{
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			$sql_array = $event['sql_array'];
 			$where = $sql_array['WHERE'];
@@ -387,7 +387,7 @@ class listener implements EventSubscriberInterface
 	function sql_livesearch_topics($event)
 	{
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			$this->update_sql_array($ex_tid_ary, $event);
 		}
@@ -397,7 +397,7 @@ class listener implements EventSubscriberInterface
 	{
 		$total_match_count = $event['total_match_count'];
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			$this->update_sql_array($ex_tid_ary, $event);
 		}
@@ -406,7 +406,7 @@ class listener implements EventSubscriberInterface
 	public function modify_tpl_ary_livesearch_usertopics_matches($event)
 	{
 		$total_match_count = $event['total_count'];
-		if(isset($this->total_match_count) && $this->total_match_count != $total_match_count)
+		if (isset($this->total_match_count) && $this->total_match_count != $total_match_count)
 		{
 			$start = $event['start'];
 			$tpl_ary = $event['tpl_ary'];
@@ -417,7 +417,7 @@ class listener implements EventSubscriberInterface
 			$tpl_ary['SEARCH_MATCHES'] = $search_matches;
 			$tpl_ary['PAGE_NUMBER'] = $page_number;
 			$event['tpl_ary'] = $tpl_ary;
-			$event['total_match_count'] =  $total_match_count;   
+			$event['total_match_count'] =  $total_match_count;
 		}
 	}
 
@@ -425,7 +425,7 @@ class listener implements EventSubscriberInterface
 	{
 		$total_match_count = $event['total_match_count'];
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			 $this->update_sql_array($ex_tid_ary, $event);
 		}
@@ -434,7 +434,7 @@ class listener implements EventSubscriberInterface
 	public function modify_tpl_ary_livesearch_userposts_matches($event)
 	{
 		$total_match_count = $event['total_count'];
-		if(isset($this->total_match_count) && $this->total_match_count != $total_match_count)
+		if (isset($this->total_match_count) && $this->total_match_count != $total_match_count)
 		{
 			$start = $event['start'];
 			$tpl_ary = $event['tpl_ary'];
@@ -445,7 +445,7 @@ class listener implements EventSubscriberInterface
 			$tpl_ary['SEARCH_MATCHES'] = $search_matches;
 			$tpl_ary['PAGE_NUMBER'] = $page_number;
 			$event['tpl_ary'] = $tpl_ary;
-			$event['total_match_count'] =  $total_match_count;   
+			$event['total_match_count'] =  $total_match_count;
 		}
 	}
 
@@ -455,7 +455,7 @@ class listener implements EventSubscriberInterface
 	public function sql_latest_general_topics($event)
 	{
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			 $this->update_sql_array($ex_tid_ary, $event);
 		}
@@ -467,7 +467,7 @@ class listener implements EventSubscriberInterface
 	function similartopics_get_topic_data($event)
 	{
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			$this->update_sql_array($ex_tid_ary, $event);
 	   }
@@ -479,7 +479,7 @@ class listener implements EventSubscriberInterface
 	function sql_pull_topics_data($event)
 	{
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			 $this->update_sql_array($ex_tid_ary, $event);
 		}
@@ -491,7 +491,7 @@ class listener implements EventSubscriberInterface
 	function sql_pull_topics_list($event)
 	{
 		$ex_tid_ary = $this->get_topics_excluded();
-		if(sizeof($ex_tid_ary))
+		if (sizeof($ex_tid_ary))
 		{
 			 $this->update_sql_array($ex_tid_ary, $event);
 		}
@@ -508,7 +508,7 @@ class listener implements EventSubscriberInterface
 					" AND topic_type=" . POST_NORMAL .
 					" AND " . $this->user->data['user_id'] . "<>topic_poster" .
 					" AND (SELECT count(g.user_id) FROM " . $this->user_group_table. " g WHERE g.group_id= f.group_id_approve_ticket AND g.user_id=" . $this->user->data['user_id'] . ")=0";
-		$result = $this->db -> sql_query($sql);	 
+		$result = $this->db -> sql_query($sql);
 		$ex_tid_ary = array();
 		while ($row = $this->db->sql_fetchrow($result))
 		{
