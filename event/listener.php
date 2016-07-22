@@ -106,7 +106,7 @@ class listener implements EventSubscriberInterface
 			'core.search_results_modify_search_title'		=> 'search_results_modify_search_title',
 
 			 //feed (for future version phpbb)
-			'core.feed_sql'		=> 'feed_sql',
+			'core.feed_base_modify_item_sql'		=> 'feed_base_modify_item_sql',
 
 			//livesearch  (ext)
 			'alg.livesearch.sql_livesearch_topics'		=> 'sql_livesearch_topics',
@@ -367,7 +367,7 @@ class listener implements EventSubscriberInterface
 	#endregion
 
 	#region feed
-	public function feed_sql($event)
+	public function feed_base_modify_item_sql($event)
 	{
 		$ex_tid_ary = $this->get_topics_excluded();
 		if (sizeof($ex_tid_ary))
