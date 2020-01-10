@@ -2,20 +2,20 @@
     "name": "alg/forumticket",
     "type": "phpbb-extension",
     "description": "Тип форума,  в котором темы видит только автор темы и определённая группа ",
-    "homepage": "http://www.chugunok.net",
-    "version": "1.0.0",
+    "homepage": "https://github.com/alg5/forumticket",
+    "version": "1.0.1",
     "time": "2016-06-20",
     "license": "GPL-2.0",
     "authors": [
         {
-            "name": "Алг",
-            "homepage": "http://www.chugunok.net",
+            "name": "Alg",
+            "homepage": "http://www.phpbbguru.net",
             "role": "Developer"
         }
        
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.4.2"
     },
 	"require-dev": {
       "phpbb/epv": "dev-master"
@@ -23,7 +23,7 @@
 	"extra": {
         "display-name": "Forum Ticket",
         "soft-require": {
-           "phpbb/phpbb": "3.1.*@dev"
+           "phpbb/phpbb": "3.2.*@dev"
         },
         "version-check": {
             "host": "alg5.github.io",

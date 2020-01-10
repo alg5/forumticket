@@ -4,15 +4,15 @@ services:
     alg.forumticket.listener:
         class: alg\forumticket\event\listener
         arguments:
-            - @config
-            - @dbal.conn
-            - @auth
-            - @template
-            - @user
-            - %core.root_path%
-            - %core.php_ext%
-            - @request
-            - @pagination
-            - %tables.user_group%
+            - '@config'
+            - '@dbal.conn'
+            - '@auth'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
+            - '@request'
+            - '@pagination'
+            - '%tables.user_group%'
         tags:
             - { name: event.listener }
