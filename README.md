@@ -1,6 +1,4 @@
------------------------------
 forumticket <br />
-[![Build Status](https://travis-ci.org/alg5/forumticket.svg?branch=master)](https://travis-ci.org/alg5/forumticket)<br />
 The extension allows to use the forum as a forum for tickets to a particular group. This means that all topics created in the forum  will be visible only to the topic poster and the approval group.
 In the admin panel under the "Forums" tab (pages "Create Forum" and "Edit forum"), you can set or update the option for using the forum as a forum for the tickets, and select the approval group from the list.
 This extension is compatible with the following extensions:
@@ -49,7 +47,7 @@ recenttopics
 
 ### Лицензия
 [GNU General Public License v2](http://opensource.org/licenses/GPL-2.0)
-
-
 © 2016 - Alg
+[![Build Status](https://travis-ci.org/alg5/forumticket.svg?branch=master)](https://travis-ci.org/alg5/forumticket)<br />
+
 

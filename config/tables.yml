@@ -1,3 +1,3 @@
 parameters:
-    tables.user_group: %core.table_prefix%user_group
+    tables.user_group: '%core.table_prefix%user_group'
 

@@ -105,7 +105,6 @@ class listener implements EventSubscriberInterface
 			'core.search_get_posts_data'		=> 'search_get_posts_data',
 			'core.search_results_modify_search_title'		=> 'search_results_modify_search_title',
 
-			 //feed (for future version phpbb)
 			'core.feed_base_modify_item_sql'		=> 'feed_base_modify_item_sql',
 
 			//livesearch  (ext)
@@ -119,6 +118,9 @@ class listener implements EventSubscriberInterface
 
 			//lasttopics  (ext)
 			'alg.lasttopics.sql_latest_general_topics'		=> 'sql_latest_general_topics',
+
+			//lasttopicsajax  (ext)
+			'alg.lasttopics.sql_latest_topics_ajax'		=> 'sql_latest_topics_ajax',
 
 			//similartopics  (ext)
 			'vse.similartopics.get_topic_data'		=> 'similartopics_get_topic_data',
@@ -462,7 +464,17 @@ class listener implements EventSubscriberInterface
 	}
 
 	#endregion
+	#region lasttopicsajax
+	public function sql_latest_topics_ajax($event)
+	{
+		$ex_tid_ary = $this->get_topics_excluded();
+		if (sizeof($ex_tid_ary))
+		{
+			 $this->update_sql_array($ex_tid_ary, $event);
+		}
+	}
 
+	#endregion
 	#region similartopics
 	function similartopics_get_topic_data($event)
 	{
