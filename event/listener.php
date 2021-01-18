@@ -47,23 +47,20 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\pagination */
 	protected $pagination;
 
-	/** @var string phpbb_user_group table */
-	protected $user_group_table;
-	/**
+                /**
 	* Constructor
 	*
-	* @param \phpbb\config\config $config
-	* @param \phpbb\db\driver\driver_interface $db
-	* @param \phpbb\auth\auth $auth
-	* @param \phpbb\template\template $template
-	* @param \phpbb\user $user
-	* @param string $root_path
-	* @param \phpbb\request\request $request
-	* @param \phpbb\pagination $pagination
-	* @param string $user_group_table
+	* @param \phpbb\config\config 				$config
+	* @param \phpbb\db\driver\driver_interface 	$db
+	* @param \phpbb\auth\auth 					$auth
+	* @param \phpbb\template\template 			$template
+	* @param \phpbb\user 						$user
+	* @param string 							$root_path
+	* @param \phpbb\request\request 			$request
+	* @param \phpbb\pagination 					$pagination
 	* @access public
 	*/
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\template\template $template, \phpbb\user $user, $phpbb_root_path, $php_ext, \phpbb\request\request_interface $request, \phpbb\pagination $pagination, $user_group_table)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\auth\auth $auth, \phpbb\template\template $template, \phpbb\user $user, $phpbb_root_path, $php_ext, \phpbb\request\request_interface $request, \phpbb\pagination $pagination)
 	{
 		$this->config = $config;
 		$this->db = $db;
@@ -74,11 +71,9 @@ class listener implements EventSubscriberInterface
 		$this->php_ext = $php_ext;
 		$this->request = $request;
 		$this->pagination =  $pagination;
-		$this->user_group_table = $user_group_table;
 
 		$this->forumticket = false;
 		$this->group_id_approve = 0;
-
 		$this->exclude_forum_topics_details = array();	//for forumlist
 
 	}
@@ -91,7 +86,7 @@ class listener implements EventSubscriberInterface
 			'core.acp_manage_forums_display_form'			=> 'acp_manage_forums_display_form',
 
 			//viewtopic
-			'core.viewtopic_modify_page_title'						=> 'viewtopic_modify_page_title',
+			'core.viewtopic_modify_page_title'			=> 'viewtopic_modify_page_title',
 
 			//viewforum
 			'core.viewforum_get_topic_data'		=> 'viewforum_get_topic_data',
@@ -231,7 +226,7 @@ class listener implements EventSubscriberInterface
 			$start = $this->request->variable('start', 0);
 			$this->template->assign_vars(array(
 				'TOTAL_TOPICS'	=> $this->user->lang('VIEW_FORUM_TOPICS', (int) $total_topic_count),
-				'PAGE_NUMBER'			=>  $total_topic_count == 0 ?  0 : $this->pagination->on_page($total_topic_count, $this->config['topics_per_page'], $start),
+				'PAGE_NUMBER'	=>  $total_topic_count == 0 ?  0 : $this->pagination->on_page($total_topic_count, $this->config['topics_per_page'], $start),
 			));
 		$event['total_topic_count'] =  $total_topic_count;
 		$event['topic_list'] =  $topic_list;
@@ -519,7 +514,7 @@ class listener implements EventSubscriberInterface
 					" WHERE f.forum_type_ticket=1 " .
 					" AND topic_type=" . POST_NORMAL .
 					" AND " . $this->user->data['user_id'] . "<>topic_poster" .
-					" AND (SELECT count(g.user_id) FROM " . $this->user_group_table. " g WHERE g.group_id= f.group_id_approve_ticket AND g.user_id=" . $this->user->data['user_id'] . ")=0";
+					" AND (SELECT count(g.user_id) FROM " . USER_GROUP_TABLE. " g WHERE g.group_id= f.group_id_approve_ticket AND g.user_id=" . $this->user->data['user_id'] . ")=0";
 		$result = $this->db -> sql_query($sql);
 		$ex_tid_ary = array();
 		while ($row = $this->db->sql_fetchrow($result))

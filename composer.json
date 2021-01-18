@@ -3,8 +3,8 @@
     "type": "phpbb-extension",
     "description": "Тип форума,  в котором темы видит только автор темы и определённая группа ",
     "homepage": "https://github.com/alg5/forumticket",
-    "version": "1.0.2",
-    "time": "2016-06-20",
+    "version": "1.0.3",
+    "time": "2021-01-18",
     "license": "GPL-2.0",
     "authors": [
         {
@@ -27,7 +27,7 @@
         },
         "version-check": {
             "host": "alg5.github.io",
-            "directory": "/versions",
+            "directory": "/versions_3.2",
             "filename": "forumticket.json"
         }
     }

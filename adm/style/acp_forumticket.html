@@ -1,19 +1,19 @@
         <hr />
 	<dl>
-		<dt><label for="forum_type_ticket">{L_ACP_FORUMTICKET}:</label><br /><span>{L_ACP_FORUMTICKET_SETTINGS_EXPLAIN}</span></dt>
+		<dt><label for="forum_type_ticket">{{ lang('ACP_FORUMTICKET') }}{{ lang('COLON') }}</label><br /><span>{{ lang('ACP_FORUMTICKET_SETTINGS_EXPLAIN') }}</span></dt>
             <dd>
-                <label><input type="checkbox" class="radio"   id="forum_type_ticket" name="forum_type_ticket"  <!-- IF S_FORUMTICKET_CHECKED -->checked="checked"<!-- ENDIF -->  /> </label>
-                <span id="blockSelectedGroup" ><lable for="groupapproval">{L_ACP_FORUMTICKET_GROUP_APPROVAL}{L_COLON}</lable>
-                    <input id="groupapproval_name" type ="text" value="{S_GROUP_APPROVAL_NAME}" />
-                    <span id="group_edit">{ICON_EDIT}</span> 
+                <label><input type="checkbox" class="radio"   id="forum_type_ticket" name="forum_type_ticket"  {% if S_FORUMTICKET_CHECKED %}checked="checked"{% endif %}  /> </label>
+                <span id="blockSelectedGroup" ><lable for="groupapproval">{{ lang('ACP_FORUMTICKET_GROUP_APPROVAL') }}{{ lang('COLON') }}</lable>
+                    <input id="groupapproval_name" type ="text" value="{{ S_GROUP_APPROVAL_NAME }}" />
+                    <span id="group_edit">{{ ICON_EDIT }}</span> 
                 </span>   
 	        </dd>
 			<dd >
                 <div id="blockGroups" style="display:none;">
-                    <lable for="groupsearch">{L_ACP_ADMINNOTIFICATIONS_FROM_LIST}{L_COLON}</lable>
-                    <select id="groups" style="width: 100%; height: 107px;" multiple="multiple">{S_GROUP_OPTIONS}</select>
+                    <lable for="groupsearch">{{ lang('ACP_ADMINNOTIFICATIONS_FROM_LIST') }}{{ lang('COLON') }}</lable>
+                    <select id="groups" style="width: 100%; height: 107px;" multiple="multiple">{{ S_GROUP_OPTIONS }}</select>
                 </div>
             </dd>
     </dl>
     <hr />
-<input type="hidden" id="hGroupId" name="hGroupId" value="{S_GROUP_APPROVAL_ID}" />
+<input type="hidden" id="hGroupId" name="hGroupId" value="{{ S_GROUP_APPROVAL_ID }}" />
