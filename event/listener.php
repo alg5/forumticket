@@ -47,7 +47,7 @@ class listener implements EventSubscriberInterface
 	/** @var \phpbb\pagination */
 	protected $pagination;
 
-                /**
+	/**
 	* Constructor
 	*
 	* @param \phpbb\config\config 				$config
